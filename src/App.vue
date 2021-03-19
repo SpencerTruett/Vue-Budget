@@ -1,14 +1,19 @@
 <template>
   <div>
     <AnnualIncome :annualIncome="annualIncome" />
+    <Expenses />
   </div>
 </template>
 
 <script>
 import AnnualIncome from "./components/AnnualIncome";
+import Expenses from "./components/Expenses";
 
 export default {
-  components: {AnnualIncome},
+  components: { 
+    AnnualIncome, 
+    Expenses
+    },
   data() {
     return {
       annualIncome: 0,
