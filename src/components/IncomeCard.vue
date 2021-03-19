@@ -2,7 +2,7 @@
   <v-card>
     <v-card-title>{{ title }}</v-card-title>
     <v-card-text>
-      <h1>{{ displayAmount }}</h1>
+      <h1 :class="dollarClass">{{ displayAmount }}</h1>
     </v-card-text>
   </v-card>
 </template>
@@ -16,6 +16,12 @@ export default {
         style: "currency",
         currency: "USD"
       }).format(this.netAmount);
+    },
+    dollarClass() {
+      return {
+        "green--text": this.netAmount >= 0,
+        "red--text": this.netAmount < 0
+      };
     }
   }
 }
