@@ -3,19 +3,24 @@
     <v-main class="pa-6 blue-grey lighten-4">
       <v-row justify="center">
         <v-col :cols="12" :md="8" :lg="4">
-          <AnnualIncome :annualIncome="annualIncome" />
+          <AnnualIncome :annualAmount="annualIncome" @income-change="handleIncomeChange" />
         </v-col>
         <v-col :cols="12" :md="6" :lg="4">
-          <IncomeCard title="Monthly Net" netAmount="monthlyNet" />
+          <IncomeCard title="Monthly Net" :net-amount="monthlyNet" />
         </v-col>
         <v-col :cols="12" :md="6" :lg="4">
-          <IncomeCard title="Annual Net" netAmount="annualNet" />
+          <IncomeCard title="Annual Net" :net-amount="annualNet" />
         </v-col>
       </v-row>
       <v-row>
         <v-col :cols="12" :lg="6">
-          <Expenses />
+          <Expenses
+            :expenses="monthlyExpenses"
+            @expense-added="handleExpenseAdded"
+            @expense-removed="handleExpenseRemoved"
+          />
         </v-col>
+        <v-col :cols="12" :lg="6"></v-col>
       </v-row>
     </v-main>
   </v-app>
@@ -37,6 +42,38 @@ export default {
       annualIncome: 0,
       monthlyExpenses: []
     };
+  },
+    created() {
+    const existingAnnual = localStorage.getItem("annualIncome");
+    const existingExpenses = localStorage.getItem("monthlyExpenses");
+    if (existingAnnual) {
+      this.annualIncome = parseFloat(existingAnnual);
+    }
+    if (existingExpenses) {
+      this.monthlyExpenses = JSON.parse(existingExpenses);
+    }
+  },
+  methods: {
+    handleIncomeChange(income) {
+      this.annualIncome = income;
+      localStorage.setItem("annualIncome", income);
+    },
+    handleExpenseAdded(newExpense) {
+      this.monthlyExpenses.push(newExpense);
+      localStorage.setItem(
+        "monthlyExpenses",
+        JSON.stringify(this.monthlyExpenses)
+      );
+    },
+    handleExpenseRemoved(expenseToRemove) {
+      this.monthlyExpenses = this.monthlyExpenses.filter(e => {
+        return e !== expenseToRemove;
+      });
+      localStorage.setItem(
+        "monthlyExpenses",
+        JSON.stringify(this.monthlyExpenses)
+      );
+    }
   },
     computed: {
     monthlyIncome() {
